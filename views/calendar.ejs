@@ -1,67 +1,206 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Event Calendar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Calendar | Student Portal</title>
 
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      background: #f4f6f9;
+    :root {
+      --primary: #4f46e5;
+      --bg-sky: url('https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?auto=format&fit=crop&w=1920&q=80');
     }
 
-    h2 {
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-sky);
+      background-size: cover;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    /* Glassmorphism Navigation Bar */
+    .navbar {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      padding: 6px 16px;
+      border-radius: 50px;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* Main Content Layout */
+    .main-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .calendar-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    header.calendar-header {
+      margin-bottom: 25px;
       text-align: center;
     }
 
-    #calendar {
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    header.calendar-header h2 {
+      font-size: 1.8rem;
+      margin: 0;
+      color: #111827;
     }
 
-    .logout {
-      text-align: right;
+    /* Customizing FullCalendar Styles */
+    #calendar {
+      background: transparent;
+      border: none;
+    }
+
+    .fc .fc-toolbar-title {
+      font-size: 1.4rem !important;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .fc .fc-button-primary {
+      background-color: white !important;
+      border-color: #e5e7eb !important;
+      color: #374151 !important;
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+
+    .fc .fc-button-primary:hover {
+      background-color: #f9fafb !important;
+    }
+
+    .fc .fc-button-active {
+      background-color: var(--primary) !important;
+      border-color: var(--primary) !important;
+      color: white !important;
+    }
+
+    /* Event Styling */
+    .fc-event {
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px !important;
+      background-color: var(--primary) !important;
+      border: none !important;
+      font-size: 0.85rem;
+      transition: transform 0.2s ease;
+    }
+
+    .fc-event:hover {
+      transform: scale(1.02);
+      filter: brightness(1.1);
+    }
+
+    .fc-daygrid-day-number {
+      text-decoration: none !important;
+      color: #6b7280;
+      padding: 8px !important;
+    }
+
+    .fc-col-header-cell-cushion {
+      text-decoration: none !important;
+      color: #374151;
+      font-weight: 600;
+      padding: 10px 0 !important;
+    }
+
+    @media (max-width: 768px) {
+      .calendar-card { padding: 15px; }
+      .fc .fc-toolbar { flex-direction: column; gap: 10px; }
     }
   </style>
 </head>
 <body>
 
-<div class="logout">
-  Logged in as <strong><%= student.name %></strong>
-</div>
+<nav class="navbar">
+  <div class="logo">
+    <i class="fas fa-calendar-alt" style="color: var(--primary);"></i>
+    <span>StudentHub</span>
+  </div>
+  <div class="user-profile">
+    <i class="fas fa-user-circle" style="color: #9ca3af; font-size: 1.2rem;"></i>
+    <span style="font-size: 0.9rem; font-weight: 500;">
+      <%= student.name %>
+    </span>
+    <a href="/logout" style="margin-left: 10px; color: #ef4444; font-size: 0.8rem; text-decoration: none;">
+      <i class="fas fa-sign-out-alt"></i>
+    </a>
+  </div>
+</nav>
 
-<h2>Event Calendar</h2>
-
-<div id="calendar"></div>
+<main class="main-container">
+  <div class="calendar-card">
+    <header class="calendar-header">
+      <h2>Upcoming Events</h2>
+    </header>
+    
+    <div id="calendar"></div>
+  </div>
+</main>
 
 <script>
   const events = <%- JSON.stringify(events) %>;
 
   document.addEventListener('DOMContentLoaded', function() {
-
-    const calendar = new FullCalendar.Calendar(
-      document.getElementById('calendar'),
-      {
-        initialView: 'dayGridMonth',
-
-        events: events.map(e => ({
-          id: e.id,
-          title: e.title + " (Seats left: " + (e.max_seats - e.seats_filled) + ")",
-          start: e.event_date
-        })),
-
-        eventClick: function(info) {
-          window.location.href = "/event/" + info.event.id;
-        }
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+      },
+      height: 'auto',
+      events: events.map(e => ({
+        id: e.id,
+        title: e.title + " (" + (e.max_seats - e.seats_filled) + " left)",
+        start: e.event_date
+      })),
+      eventClick: function(info) {
+        window.location.href = "/event/" + info.event.id;
       }
-    );
+    });
 
     calendar.render();
   });

@@ -26,18 +26,6 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
 
-/* ------------------ TEST ROUTE ------------------ */
-
-app.get("/test-db", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM events");
-    res.json(result.rows);
-  } catch (err) {
-    console.error("DB ERROR:", err);
-    res.status(500).send(err.message);
-  }
-});
-
 /* ------------------ LOGIN ------------------ */
 
 app.get("/login", (req, res) => {
@@ -49,7 +37,7 @@ app.post("/login", async (req, res) => {
     const { name, roll } = req.body;
 
     if (!name || !roll) {
-      return res.status(400).send("Name and roll required");
+      return res.send("All fields required");
     }
 
     let student = await pool.query(
@@ -65,12 +53,11 @@ app.post("/login", async (req, res) => {
     }
 
     req.session.student = student.rows[0];
-
     res.redirect("/calendar");
 
   } catch (err) {
     console.error(err);
-    res.status(500).send("Login error");
+    res.send("Login error");
   }
 });
 
@@ -113,7 +100,7 @@ app.get("/event/:id", async (req, res) => {
   });
 });
 
-/* ------------------ REGISTER ------------------ */
+/* ------------------ REGISTER FOR EVENT ------------------ */
 
 app.post("/register/:id", async (req, res) => {
   if (!req.session.student) {
@@ -161,6 +148,14 @@ app.post("/register/:id", async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+/* ------------------ LOGOUT ------------------ */
+
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 });
 
 /* ------------------ START SERVER ------------------ */
