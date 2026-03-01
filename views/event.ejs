@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= event.title %> | Event Registration</title>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -15,19 +17,18 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: var(--bg-light);
-      color: var(--text-dark);
       margin: 0;
       line-height: 1.6;
+      color: var(--text-dark);
     }
 
-    /* Banner Styles */
     .hero-banner {
       width: 100%;
       height: 350px;
       background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                  url('https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&w=1200&q=80'); /* Default placeholder */
+                  url('https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&w=1200&q=80');
       background-size: cover;
       background-position: center;
       display: flex;
@@ -40,10 +41,9 @@
     .hero-content h1 {
       font-size: 3rem;
       margin: 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
     }
 
-    /* Container & Card */
     .container {
       max-width: 800px;
       margin: -50px auto 40px;
@@ -53,11 +53,10 @@
     .event-card {
       background: white;
       padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
     }
 
-    /* Stats Section */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -69,43 +68,64 @@
     .stat-box {
       padding: 15px;
       background: #f9fafb;
-      border-radius: 8px;
+      border-radius: 12px;
       border: 1px solid #e5e7eb;
     }
 
     .stat-number {
       display: block;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: bold;
       color: var(--primary-color);
     }
 
-    /* Registration Logic */
-    .btn-reg {
+    .btn {
       display: block;
       width: 100%;
-      padding: 15px;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 1rem;
       font-weight: 600;
+      border: none;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: 0.2s ease;
+      margin-top: 15px;
     }
 
-    .btn-reg:hover {
+    .btn-register {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-register:hover {
       background-color: #4338ca;
     }
 
+    .btn-cancel {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .btn-cancel:hover {
+      background-color: #dc2626;
+    }
+
+    .success-box {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
     .full-notice {
-      text-align: center;
       background: #fee2e2;
       color: var(--danger-color);
       padding: 15px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: bold;
+      text-align: center;
     }
 
     .back-link {
@@ -130,39 +150,61 @@
 
   <main class="container">
     <article class="event-card">
+
       <h2>About This Event</h2>
       <p><%= event.description %></p>
 
       <div class="stats-grid">
         <div class="stat-box">
           <span class="stat-number"><%= event.max_seats %></span>
-          <span class="stat-label">Total Seats</span>
+          Total Seats
         </div>
         <div class="stat-box">
           <span class="stat-number"><%= registeredCount %></span>
-          <span class="stat-label">Registered</span>
+          Registered
         </div>
         <div class="stat-box">
           <span class="stat-number" style="color: var(--accent-color);">
             <%= event.max_seats - registeredCount %>
           </span>
-          <span class="stat-label">Remaining</span>
+          Remaining
         </div>
       </div>
 
-      <% if (registeredCount < event.max_seats) { %>
-        <form method="POST" action="/register/<%= event.id %>">
-          <button type="submit" class="btn-reg">Secure My Spot</button>
-        </form>
-      <% } else { %>
-        <div class="full-notice">
-          <i class="fas fa-exclamation-circle"></i> This event is currently full.
+      <% if (alreadyRegistered) { %>
+
+        <div class="success-box">
+          <i class="fas fa-check-circle"></i>
+          You are registered for this event.
         </div>
+
+        <form method="POST" action="/cancel/<%= event.id %>">
+          <button type="submit" class="btn btn-cancel">
+            Cancel Registration
+          </button>
+        </form>
+
+      <% } else if (registeredCount < event.max_seats) { %>
+
+        <form method="POST" action="/register/<%= event.id %>">
+          <button type="submit" class="btn btn-register">
+            Secure My Spot
+          </button>
+        </form>
+
+      <% } else { %>
+
+        <div class="full-notice">
+          <i class="fas fa-exclamation-circle"></i>
+          This event is currently full.
+        </div>
+
       <% } %>
 
       <a href="/calendar" class="back-link">
         <i class="fas fa-arrow-left"></i> Back to Calendar
       </a>
+
     </article>
   </main>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Login</title>
+  <title>Create Account</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
@@ -101,19 +101,19 @@
       background: #1f2937;
     }
 
-    .register-link {
+    .login-link {
       margin-top: 18px;
       font-size: 0.9rem;
       color: #6b7280;
     }
 
-    .register-link a {
+    .login-link a {
       color: #4f46e5;
       text-decoration: none;
       font-weight: 600;
     }
 
-    .register-link a:hover {
+    .login-link a:hover {
       text-decoration: underline;
     }
 
@@ -132,17 +132,22 @@
 
   <div class="login-card">
     <div class="logo-area">
-      <i class="fas fa-graduation-cap"></i>
+      <i class="fas fa-user-plus"></i>
     </div>
 
-    <h2>Student Login</h2>
-    <p class="subtitle">Enter your credentials to continue</p>
+    <h2>Create Account</h2>
+    <p class="subtitle">Register to access events</p>
 
     <% if (typeof error !== 'undefined' && error) { %>
       <div class="error"><%= error %></div>
     <% } %>
 
-    <form method="POST" action="/login">
+    <form method="POST" action="/register">
+      <div class="input-wrapper">
+        <i class="fas fa-user"></i>
+        <input name="name" placeholder="Full Name" required />
+      </div>
+
       <div class="input-wrapper">
         <i class="fas fa-id-card"></i>
         <input name="roll" placeholder="Roll Number" required />
@@ -153,12 +158,12 @@
         <input type="password" name="password" placeholder="Password" required />
       </div>
 
-      <button type="submit">Sign In</button>
+      <button type="submit">Register</button>
     </form>
 
-    <div class="register-link">
-      Don’t have an account?
-      <a href="/register">Register</a>
+    <div class="login-link">
+      Already have an account?
+      <a href="/login">Login</a>
     </div>
 
   </div>
