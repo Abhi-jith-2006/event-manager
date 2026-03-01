@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= event.title %></title>
+</head>
+<body>
+
+<h2><%= event.title %></h2>
+<p><%= event.description %></p>
+
+<p><strong>Max Seats:</strong> <%= event.max_seats %></p>
+<p><strong>Already Registered:</strong> <%= registeredCount %></p>
+<p><strong>Seats Left:</strong> <%= event.max_seats - registeredCount %></p>
+
+<% if (registeredCount < event.max_seats) { %>
+  <form method="POST" action="/register/<%= event.id %>">
+    <button type="submit">Register</button>
+  </form>
+<% } else { %>
+  <p style="color:red;">Event Full</p>
+<% } %>
+
+<a href="/calendar">Back to Calendar</a>
+
+</body>
+</html>

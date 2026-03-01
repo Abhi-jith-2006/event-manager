@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Calendar</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f4f6f9;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    #calendar {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .logout {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<div class="logout">
+  Logged in as <strong><%= student.name %></strong>
+</div>
+
+<h2>Event Calendar</h2>
+
+<div id="calendar"></div>
+
+<script>
+  const events = <%- JSON.stringify(events) %>;
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    const calendar = new FullCalendar.Calendar(
+      document.getElementById('calendar'),
+      {
+        initialView: 'dayGridMonth',
+
+        events: events.map(e => ({
+          id: e.id,
+          title: e.title + " (Seats left: " + (e.max_seats - e.seats_filled) + ")",
+          start: e.event_date
+        })),
+
+        eventClick: function(info) {
+          window.location.href = "/event/" + info.event.id;
+        }
+      }
+    );
+
+    calendar.render();
+  });
+</script>
+
+</body>
+</html>
